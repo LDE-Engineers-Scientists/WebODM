@@ -53,6 +53,7 @@ coverage.xml
 *.log
 local_settings.py
 secret_key.py
+webodm/settings_override.py
 
 # Flask stuff:
 instance/

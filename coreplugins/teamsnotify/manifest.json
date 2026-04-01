@@ -1,0 +1,13 @@
+{
+    "name": "Teams Notification",
+    "webodmMinVersion": "0.6.2",
+    "description": "Send task notifications to Microsoft Teams channels via webhook",
+    "version": "1.0.0",
+    "author": "LDE Engineers & Scientists",
+    "email": "",
+    "repository": "https://github.com/LDE-Engineers-Scientists/WebODM",
+    "tags": ["notification", "teams", "webhook"],
+    "homepage": "https://github.com/LDE-Engineers-Scientists/WebODM",
+    "experimental": false,
+    "deprecated": false
+}

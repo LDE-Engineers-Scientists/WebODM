@@ -1,0 +1,67 @@
+{% extends "app/plugins/templates/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans 'Teams Notification' %}</h2>
+<p>Send task notifications to a Microsoft Teams channel via webhook.</p>
+<hr>
+
+<h4>Setup Instructions</h4>
+<ol>
+    <li>In Microsoft Teams, go to your target channel</li>
+    <li>Click <strong>...</strong> &gt; <strong>Workflows</strong> &gt; <strong>"When a Teams webhook request is received"</strong></li>
+    <li>Choose your authentication preference and add the action <strong>"Post card in chat or channel"</strong></li>
+    <li>Save the workflow and copy the webhook URL</li>
+    <li>Paste the URL below and click <strong>Apply Settings</strong></li>
+</ol>
+<hr>
+
+<form action="/plugins/teamsnotify/" method="post" class="mt-3">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+        <label for="webhook_url"><strong>Teams Webhook URL</strong></label>
+        <input name="webhook_url" value="{{ form.webhook_url.value|default_if_none:'' }}"
+               type="url" class="form-control"
+               placeholder="https://prod-XX.westus.logic.azure.com/workflows/..." />
+        {{ form.webhook_url.errors }}
+    </div>
+
+    <br>
+    <p><strong>Notification Events</strong></p>
+
+    <div class="checkbox mb-3">
+        <label>
+            <input name="notify_task_completed"
+                   {% if form.notify_task_completed.value %} checked {% endif %}
+                   type="checkbox"> Task Completed
+        </label>
+        {{ form.notify_task_completed.errors }}
+    </div>
+
+    <div class="checkbox mb-3">
+        <label>
+            <input name="notify_task_failed"
+                   {% if form.notify_task_failed.value %} checked {% endif %}
+                   type="checkbox"> Task Failed
+        </label>
+        {{ form.notify_task_failed.errors }}
+    </div>
+
+    <div class="checkbox mb-3">
+        <label>
+            <input name="notify_task_removed"
+                   {% if form.notify_task_removed.value %} checked {% endif %}
+                   type="checkbox"> Task Removed
+        </label>
+        {{ form.notify_task_removed.errors }}
+    </div>
+
+    <hr>
+    <p>{{ form.non_field_errors }}</p>
+    <div>
+        <button name="apply_configuration" value="yes" class="btn btn-primary">Apply Settings</button>
+        <button name="test_configuration" value="yes" class="btn btn-info">Send Test Message</button>
+    </div>
+</form>
+{% endblock %}

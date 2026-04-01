@@ -1,0 +1,12 @@
+FROM opendronemap/webodm_webapp
+
+# Install LDE additions into the existing venv
+ENV PATH="/webodm/venv/bin:$PATH"
+
+RUN pip install django-allauth==0.51.0 pymsteams>=0.2.2
+
+# Copy LDE plugin and customised files
+COPY coreplugins/teamsnotify/ /webodm/coreplugins/teamsnotify/
+COPY coreplugins/diagnostic/plugin.py /webodm/coreplugins/diagnostic/plugin.py
+COPY app/templates/app/registration/login.html /webodm/app/templates/app/registration/login.html
+COPY webodm/urls.py /webodm/webodm/urls.py

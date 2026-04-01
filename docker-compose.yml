@@ -15,17 +15,23 @@ services:
     restart: unless-stopped
     oom_score_adj: -100
   webapp:
-    image: opendronemap/webodm_webapp
+    build:
+      context: .
+      dockerfile: Dockerfile.lde
+    image: lde/webodm_webapp
     container_name: webapp
     entrypoint: /bin/bash -c "service cron start && chmod +x /webodm/*.sh && /bin/bash -c \"/webodm/wait-for-postgres.sh db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/start.sh\""
     volumes:
       - ${WO_MEDIA_DIR}:/webodm/app/media:z
+      - ./webodm/settings_override.py:/webodm/webodm/settings_override.py:ro
     ports:
       - "${WO_PORT}:8000"
     depends_on:
       - db
       - broker
       - worker
+    env_file:
+      - .env
     environment:
       - WO_PORT
       - WO_HOST
@@ -43,14 +49,17 @@ services:
     restart: unless-stopped
     oom_score_adj: -500
   worker:
-    image: opendronemap/webodm_webapp
+    image: lde/webodm_webapp
     container_name: worker
     entrypoint: /bin/bash -c "/webodm/wait-for-postgres.sh db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/wait-for-it.sh -t 0 webapp:8000 -- /webodm/worker.sh start"
     volumes:
       - ${WO_MEDIA_DIR}:/webodm/app/media:z
+      - ./webodm/settings_override.py:/webodm/webodm/settings_override.py:ro
     depends_on:
       - db
       - broker
+    env_file:
+      - .env
     environment:
       - WO_BROKER
       - WO_DEBUG
