@@ -46,6 +46,17 @@
         </div>
     </form>
 
+    <!-- LDE: Microsoft Entra SSO button -->
+    <div class="text-center" style="margin-top: 15px; margin-bottom: 15px;">
+        <hr style="margin: 10px 0;">
+        <p style="color: #666; font-size: 13px;">Or sign in with your organisation account</p>
+        <a href="/accounts/microsoft/login/?process=login"
+           class="btn btn-primary btn-block"
+           style="background-color: #0078d4; border-color: #0078d4;">
+            <i class="fa fa-windows"></i> Sign in with Microsoft
+        </a>
+    </div>
+
     {% if ext_auth %}
     <div class="text-center" id="authLoading">
         <i class="fa fa-spin fa-circle-notch fa-spin fa-fw fa-2x"></i>

@@ -1,12 +1,20 @@
 FROM opendronemap/webodm_webapp
 
-# Install LDE additions into the existing venv
+# Install LDE Python dependencies into the existing venv
 ENV PATH="/webodm/venv/bin:$PATH"
+RUN pip install django-allauth==0.51.0 "pymsteams>=0.2.2"
 
-RUN pip install django-allauth==0.51.0 pymsteams>=0.2.2
+# ---------------------------------------------------------------
+# LDE customisations — all source files live in lde/ in the repo.
+# WebODM core files are untouched; we layer our versions on top.
+# When updating WebODM, just rebuild — no core file conflicts.
+# ---------------------------------------------------------------
 
-# Copy LDE plugin and customised files
+# Teams notification plugin (new, never conflicts with upstream)
 COPY coreplugins/teamsnotify/ /webodm/coreplugins/teamsnotify/
-COPY coreplugins/diagnostic/plugin.py /webodm/coreplugins/diagnostic/plugin.py
-COPY app/templates/app/registration/login.html /webodm/app/templates/app/registration/login.html
-COPY webodm/urls.py /webodm/webodm/urls.py
+
+# Overrides — our versions replace the originals at container build time.
+# Source of truth is lde/ in the repo, not the WebODM core files.
+COPY lde/login.html /webodm/app/templates/app/registration/login.html
+COPY lde/diagnostic_plugin.py /webodm/coreplugins/diagnostic/plugin.py
+COPY lde/urls.py /webodm/webodm/lde_urls.py
